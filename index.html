@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تمرین تایپ فارسی تیروتیر - tirotir.ir</title>
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      direction: rtl;
+      text-align: center;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    #lessonSelect, #keyboardToggle {
+      margin: 15px;
+      font-size: 18px;
+      padding: 5px;
+    }
+    #exercise {
+      font-size: 24px;
+      margin: 20px;
+      color: #333;
+    }
+    #inputBox {
+      width: 80%;
+      font-size: 22px;
+      padding: 10px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      color: green;
+    }
+    #timer {
+      font-size: 22px;
+      margin-top: 10px;
+      color: #d9534f;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .wrong {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    #keyboardGuide {
+      margin-top: 30px;
+      padding: 20px;
+      background: white;
+      display: none;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .keyboard-row {
+      display: flex;
+      justify-content: center;
+      margin: 5px 0;
+    }
+    .key {
+      border: 1px solid #ccc;
+      padding: 10px 12px;
+      margin: 2px;
+      border-radius: 5px;
+      background-color: #e0e0e0;
+      font-size: 18px;
+      min-width: 35px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>تمرین تایپ ده‌انگشتی فارسی تیروتیر</h1>
+  <label for="lessonSelect">انتخاب درس:</label>
+  <select id="lessonSelect">
+    <option value="0">درس ۱</option>
+    <option value="1">درس ۲</option>
+    <option value="2">درس ۳</option>
+    <option value="3">درس ۴</option>
+    <option value="4">درس ۵</option>
+    <option value="5">درس ۶</option>
+    <option value="6">درس ۷</option>
+    <option value="7">درس ۸</option>
+    <option value="8">درس ۹</option>
+    <option value="9">درس ۱۰</option>
+    <option value="10">درس ۱۱ - علائم نگارشی</option>
+    <option value="11">درس ۱۲ - اعداد فارسی</option>
+    <option value="12">درس ۱۳ - کلمات کامل</option>
+    <option value="13">درس ۱۴ - حروف ث، ح، خ</option>
+    <option value="14">درس ۱۵ - حروف ع، غ</option>
+    <option value="15">درس ۱۶ - حروف ف، ض</option>
+    <option value="16">درس ۱۷ - کلمات عربی‌ریشه</option>
+    <option value="17">درس ۱۸ - تمرین دیکته‌ای</option>
+    <option value="18">درس ۱۹ - تمرین سرعتی</option>
+    <option value="random">تصادفی</option>
+  </select>
+
+  <button id="keyboardToggle">نمایش/پنهان‌کردن صفحه‌کلید مجازی</button>
+
+  <div id="exercise">برای شروع تمرین، درس را انتخاب کن و دکمه زیر را بزن.</div>
+  <input type="text" id="inputBox" placeholder="اینجا تایپ کن..." disabled />
+  <div id="timer"></div>
+  <div id="result"></div>
+  <button onclick="startExercise()">شروع تمرین</button>
+
+  <div id="keyboardGuide">
+    <div class="keyboard-row">
+      <span class="key">ض</span><span class="key">ص</span><span class="key">ث</span><span class="key">ق</span><span class="key">ف</span><span class="key">غ</span><span class="key">ع</span><span class="key">ه</span><span class="key">خ</span><span class="key">ح</span><span class="key">ج</span><span class="key">چ</span>
+    </div>
+    <div class="keyboard-row">
+      <span class="key">ش</span><span class="key">س</span><span class="key">ی</span><span class="key">ب</span><span class="key">ل</span><span class="key">ا</span><span class="key">ت</span><span class="key">ن</span><span class="key">م</span><span class="key">ک</span><span class="key">گ</span>
+    </div>
+    <div class="keyboard-row">
+      <span class="key">ظ</span><span class="key">ط</span><span class="key">ز</span><span class="key">ر</span><span class="key">ذ</span><span class="key">د</span><span class="key">ئ</span><span class="key">و</span><span class="key">پ</span><span class="key">؟</span>
+    </div>
+  </div>
+  <!-- <div>  
+    <a href="http://tirotir.ir">آموزشگاه هوش مصنوعی</a>
+  </div> -->
+  <script>
+    const exercises = [
+      // درس 1: ت و ب و فاصله
+      "ت ب ت ب ب ت ت ب",
+      // درس 2: ن و ی + قبلی‌ها
+      "ن ی ن ن ی ی ن ی",
+      // درس 3: ت ب ن ی ب ن ی ت ن ت ی (ترکیب بیشتر)
+      "ت ب ن ی ب ن ی ت ن ت ی",
+      // درس 4: ک و ش
+      "ش ک م س ن ی ب ت",
+      // درس 5: ژ و ص
+      "ژ ص ک ش ن ژ ت ص",
+      // درس 6: د و گ
+      "د ب ت گ گ د ش ک",
+      // درس 7: چ و ل
+      "چ ل ت ب ل ن چ ک",
+      // درس 8: ر و ق
+      "ر ق چ ک ق ش ر ل",
+      // درس 9: ط و ظ
+      "ط ظ ب ک ن ط ش ظ",
+      // درس 10: ذ و ز
+      "ذ ز ک ش ز ن ذ ت",
+      // درس 11: علائم نگارشی
+      "برو خانه. سلام، خوبی؟ چه خبر! کجا می‌روی؟",
+      // درس 12: اعداد فارسی
+      "۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ ۰",
+      // درس 13: کلمات کامل
+      "کتاب دفتر مدرسه خانه برو بیا بخوان بگیر",
+      // درس 14: ث، ح، خ
+      "ث ح خ ک خ ث ب ح",
+      // درس 15: ع، غ
+      "ع غ ش ک غ ن ع ل",
+      // درس 16: ف، ض
+      "ف ض ک ش ض ن ف ت",
+      // درس 17: کلمات عربی‌ریشه
+      "ثواب حفظ خطر عقل غریب ضعف عضله فصاحت",
+      // درس 18: تمرین دیکته‌ای
+      "امروز هوا بسیار خوب است حافظه قوی نتیجه تمرین زیاد است عضله ذهن با تکرار قوی‌تر می‌شود",
+      // درس 19: تمرین سرعتی (کلمات و جملات)
+      "کلمات جمله معنی درست تایپ سریع و دقیق مهارت مهمی است هر روز تمرین یعنی یک گام به جلو"
+    ];
+
+    let current = "";
+    let startTime;
+    let timerInterval;
+    let timeLeft = 60;
+
+    function startTimer() {
+      timeLeft = 60;
+      document.getElementById('timer').innerText = `⏱ زمان باقی‌مانده: ${timeLeft} ثانیه`;
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').innerText = `⏱ زمان باقی‌مانده: ${timeLeft} ثانیه`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById('inputBox').disabled = true;
+          document.getElementById('result').innerText = '⛔ زمان تمام شد!';
+        }
+      }, 1000);
+    }
+
+    function startExercise() {
+      let selected = document.getElementById('lessonSelect').value;
+      if (selected === 'random') {
+        current = exercises[Math.floor(Math.random() * exercises.length)];
+      } else {
+        current = exercises[parseInt(selected)];
+      }
+      document.getElementById('exercise').innerText = current;
+      const inputBox = document.getElementById('inputBox');
+      inputBox.value = "";
+      inputBox.disabled = false;
+      inputBox.focus();
+      document.getElementById('result').innerText = "";
+      inputBox.classList.remove("wrong");
+      startTime = new Date();
+      clearInterval(timerInterval);
+      startTimer();
+
+      inputBox.oninput = function () {
+        const typed = inputBox.value;
+        if (current.startsWith(typed)) {
+          inputBox.classList.remove("wrong");
+        } else {
+          inputBox.classList.add("wrong");
+        }
+        if (typed.trim() === current.trim()) {
+          const endTime = new Date();
+          const duration = (endTime - startTime) / 1000;
+          const words = current.trim().split(/\s+/).length;
+          const wpm = Math.round((words / duration) * 60);
+          document.getElementById('result').innerText = `✅ درست! سرعت: ${wpm} واژه در دقیقه`;
+          inputBox.disabled = true;
+          clearInterval(timerInterval);
+          inputBox.classList.remove("wrong");
+        }
+      };
+    }
+
+    document.getElementById("keyboardToggle").addEventListener("click", function() {
+      const keyboard = document.getElementById("keyboardGuide");
+      if (keyboard.style.display === "none" || keyboard.style.display === "") {
+        keyboard.style.display = "block";
+      } else {
+        keyboard.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
